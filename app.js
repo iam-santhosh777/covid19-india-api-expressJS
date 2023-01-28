@@ -46,3 +46,36 @@ app.get("/states/", async (request, response) => {
     getStateDetails.map((eachState) => convertStateDBObject(eachState))
   );
 });
+
+// API 2: Returns a state based on the state ID.
+
+app.get("/states/:stateId/", async (request, response) => {
+  const { stateId } = request.params;
+  const getStateQuery = `
+    SELECT state_id As stateId, 
+    state_name AS stateName,
+    population
+    FROM state WHERE state_id = ${stateId};`;
+
+  const stateQueryResponse = await db.get(getStateQuery);
+  response.send(stateQueryResponse);
+});
+
+// API 3: Create a district in the district table.
+app.post("/districts/", async (request, response) => {
+  const { districtName, stateId, cases, cured, active, deaths } = request.body;
+  const createDistrictQuery = `
+  INSERT INTO district(district_name, state_id, cases, cured, active, deaths)
+  VALUES(
+      '$districtName',
+      ${stateId},
+      ${cases},
+      ${cured},
+      ${active},
+      ${deaths}
+  );
+  `;
+
+  const createDistrictQueryResponse = await db.run(createDistrictQuery);
+  response.send("District Successfully Added");
+});
