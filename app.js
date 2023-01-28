@@ -67,7 +67,7 @@ app.post("/districts/", async (request, response) => {
   const createDistrictQuery = `
   INSERT INTO district(district_name, state_id, cases, cured, active, deaths)
   VALUES(
-      '$districtName',
+      '${districtName}',
       ${stateId},
       ${cases},
       ${cured},
